@@ -4,7 +4,6 @@ import {createFilterTemplate} from "./view/filter.js";
 import {createSortTemplate} from "./view/sort.js";
 import {createListTemplate} from "./view/list.js";
 import {createEventTemplate} from "./view/event.js";
-// import {createEventCreateTemplate} from "./view/event-create.js";
 import {createEventEditTemplate} from "./view/event-edit.js";
 
 const EVENTS_COUNT = 3;
@@ -27,13 +26,9 @@ render(tripEventsElement, createSortTemplate(), `beforeend`);
 render(tripEventsElement, createListTemplate(), `beforeend`);
 
 const tripEventsListElement = tripEventsElement.querySelector(`.trip-events__list`);
-// const tripEventsItemElement = tripEventsListElement.querySelector(`.trip-events__item`);
 
 render(tripEventsListElement, createEventEditTemplate(), `afterbegin`);
 
 for (let i = 0; i < EVENTS_COUNT; i++) {
   render(tripEventsListElement, createEventTemplate(), `beforeend`);
 }
-
-
-
