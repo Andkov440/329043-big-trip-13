@@ -1,24 +1,39 @@
 import dayjs from 'dayjs';
-import {eventTypes, destination, offers} from "../view/utils.js";
+import {eventTypes} from "../view/utils.js";
 
-export const createEventCreateTemplate = (event) => {
-  const eventTypesList = eventTypes.map((item) => `<div class="event__type-item">
-  <input id="event-type-${item.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item.toLowerCase()}">
-  <label class="event__type-label  event__type-label--${item.toLowerCase()}" for="event-type-${item.toLowerCase()}-1">${item}</label>
+const getEventTypesList = (arr) => {
+  return arr.map((item) => `<div class="event__type-item">
+<input id="event-type-${item.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item.toLowerCase()}">
+<label class="event__type-label  event__type-label--${item.toLowerCase()}" for="event-type-${item.toLowerCase()}-1">${item}</label>
 </div>`).join(``);
+};
 
-  const destinationList = destination.map((item) => `<option value="${item}"></option>`).join(``);
-  const offerList = offers.map((item) => `<div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.type}-1" type="checkbox" name="event-offer-${item.type}" checked>
+const getDestinationPointList = (arr) => {
+  return arr.map((item) => `<option value="${item.destinationPoint}"></option>`).join(``);
+};
+
+const getOfferList = (arr) => {
+  return arr.map((item) => `<div class="event__offer-selector">
+  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.type}-1" type="checkbox" name="event-offer-${item.type}" ${item.checked ? `checked` : ``}>
   <label class="event__offer-label" for="event-offer-${item.type}-1">
     <span class="event__offer-title">${item.name}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${item.price}</span>
   </label>
 </div>`).join(``);
+};
 
-  const {eventType, destinationPoint, starttime, endtime, eventPrice, description, photo} = event;
-  const photoList = photo.map((item) => `<img class="event__photo" src="${item}" alt="Event photo">`).join(``);
+const getPhotoList = (arr) => {
+  return arr.map((item) => `<img class="event__photo" src="${item}" alt="Event photo">`).join(``);
+};
+
+export const createEventCreateTemplate = (events) => {
+  const {eventType, destinationPoint, starttime, endtime, eventPrice, description, photo, eventOffers} = events[0];
+
+  const eventTypesList = getEventTypesList(eventTypes);
+  const destinationPointList = getDestinationPointList(events);
+  const offerList = getOfferList(eventOffers);
+  const photoList = getPhotoList(photo);
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -44,7 +59,7 @@ export const createEventCreateTemplate = (event) => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationPoint}" list="destination-list-1">
         <datalist id="destination-list-1">
-        ${destinationList}
+        ${destinationPointList}
         </datalist>
       </div>
 

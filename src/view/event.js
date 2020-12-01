@@ -1,14 +1,18 @@
 import dayjs from 'dayjs';
 import {getDuration} from "./utils.js";
 
-export const createEventTemplate = (event) => {
-  const {eventType, eventOffers, destinationPoint, starttime, endtime, eventPrice, isFavorite} = event;
-
-  const offer = eventOffers.map((item) => `<li class="event__offer">
+const getOffer = (arr) => {
+  return arr.map((item) => `<li class="event__offer">
   <span class="event__offer-title">${item.name}</span>
   &plus;&euro;&nbsp;
   <span class="event__offer-price">${item.price}</span>
   </li>`).join(` `);
+};
+
+export const createEventTemplate = (event) => {
+  const {eventType, eventOffers, destinationPoint, starttime, endtime, eventPrice, isFavorite} = event;
+
+  const offer = getOffer(eventOffers);
 
   const isActive = isFavorite ? `active` : ``;
 

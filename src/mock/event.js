@@ -1,5 +1,5 @@
 import * as dayjs from 'dayjs';
-import {getRandomInteger, getRandomArray, eventTypes, destination, offers} from "../view/utils.js";
+import {getRandomInteger, getRandomArray, eventTypes, destination, offers, text} from "../view/utils.js";
 
 
 const generateEventType = () => {
@@ -15,15 +15,6 @@ const generateDestination = () => {
 };
 
 const generateDescription = () => {
-  const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Cras aliquet varius magna, non porta ligula feugiat eget.
-                  Fusce tristique felis at fermentum pharetra.
-                  Aliquam id orci ut lectus varius viverra.
-                  Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.
-                  Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.
-                  Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.
-                  Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.
-                  Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
   const textArray = text.split(`.`);
 
   return getRandomArray(textArray, 1, 5);

@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 
 export const createInfoTemplate = (events) => {
-
   const destinationPointList = events.map((item) => item.destinationPoint);
   const startTimeList = events.map((item) => item.starttime);
   const endTimeList = events.map((item) => item.endtime);
