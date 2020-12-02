@@ -1,32 +1,63 @@
-import {render} from "./view/utils.js";
-import {createInfoTemplate} from "./view/info.js";
-import {createMenuTemplate} from "./view/menu.js";
-import {createFilterTemplate} from "./view/filter.js";
-import {createSortTemplate} from "./view/sort.js";
-import {createListTemplate} from "./view/list.js";
-import {createEventTemplate} from "./view/event.js";
-import {createEventEditTemplate} from "./view/event-edit.js";
+import SiteInfoView from "./view/info.js";
+import NewEventButtonView from "./view/new-event-button.js";
+import SiteMenuView from "./view/menu.js";
+import FilterView from "./view/filter.js";
+import SortView from "./view/sort.js";
+import TripView from "./view/trip.js";
+import EventListView from "./view/list.js";
+import EventView from "./view/event.js";
+import EventEditView from "./view/event-edit.js";
 import {generateEvent} from "./mock/event.js";
+import {render, RenderPosition} from "./utils.js";
 
 const EVENTS_COUNT = 5;
 
 const events = new Array(EVENTS_COUNT).fill().map(generateEvent);
 
+const renderEvent = (eventListElement, event) => {
+  const eventComponent = new EventView(event);
+  const eventEditComponent = new EventEditView(events, event);
+
+  const replaceCardToForm = () => {
+    eventListElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+  };
+
+  const replaceFormToCard = () => {
+    eventListElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+  };
+
+  eventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    replaceCardToForm();
+  });
+
+  eventEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    replaceFormToCard();
+  });
+
+  render(eventListElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
+const pageBody = document.querySelector(`.page-body`);
+
 const tripMainElement = document.querySelector(`.trip-main`);
-const tripEventsElement = document.querySelector(`.trip-events`);
+const siteInfoComponent = new SiteInfoView(events);
+render(tripMainElement, siteInfoComponent.getElement(), RenderPosition.AFTERBEGIN);
+
+const newEventButtonComponent = new NewEventButtonView();
+render(tripMainElement, newEventButtonComponent.getElement(), RenderPosition.BEFOREEND);
 
 const siteMenuElement = tripMainElement.querySelector(`.trip-controls`);
+render(siteMenuElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND);
+render(siteMenuElement, new FilterView().getElement(), RenderPosition.BEFOREEND);
 
-render(tripMainElement, createInfoTemplate(events), `afterbegin`);
+const tripElement = pageBody.querySelector(`.page-main > .page-body__container`);
 
-render(siteMenuElement, createMenuTemplate(), `beforeend`);
-render(siteMenuElement, createFilterTemplate(), `beforeend`);
+const tripComponent = new TripView();
+render(tripElement, tripComponent.getElement(), RenderPosition.BEFOREEND);
+render(tripComponent.getElement(), new SortView().getElement(), RenderPosition.BEFOREEND);
 
-render(tripEventsElement, createSortTemplate(), `beforeend`);
-render(tripEventsElement, createListTemplate(), `beforeend`);
+const eventListComponent = new EventListView();
+render(tripComponent.getElement(), eventListComponent.getElement(), RenderPosition.BEFOREEND);
 
-const tripEventsListElement = tripEventsElement.querySelector(`.trip-events__list`);
-
-render(tripEventsListElement, createEventEditTemplate(events), `afterbegin`);
-
-events.forEach((event) => render(tripEventsListElement, createEventTemplate(event), `beforeend`));
+events.forEach((event) => renderEvent(eventListComponent.getElement(), event));

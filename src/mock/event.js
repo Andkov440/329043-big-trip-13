@@ -1,5 +1,5 @@
 import * as dayjs from 'dayjs';
-import {getRandomInteger, getRandomArray, eventTypes, destination, offers, text} from "../view/utils.js";
+import {getRandomInteger, getRandomArray, eventTypes, destination, offers, text} from "../utils.js";
 
 
 const generateEventType = () => {

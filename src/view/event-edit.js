@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {eventTypes} from "../view/utils.js";
+import {eventTypes, createElement} from "../utils.js";
 
 const getEventTypesList = (arr) => {
   return arr.map((item) => `<div class="event__type-item">
@@ -23,9 +23,8 @@ const getOfferList = (arr) => {
 </div>`).join(``);
 };
 
-export const createEventEditTemplate = (events) => {
-  const {eventType, destinationPoint, starttime, endtime, eventPrice, description, eventOffers} = events[0];
-
+const createEventEditTemplate = (events, event) => {
+  const {eventType, destinationPoint, starttime, endtime, eventPrice, description, eventOffers} = event;
   const eventTypesList = getEventTypesList(eventTypes);
   const destinationPointList = getDestinationPointList(events);
   const offerList = getOfferList(eventOffers);
@@ -97,3 +96,28 @@ export const createEventEditTemplate = (events) => {
   </form>
 </li>`;
 };
+
+export default class EventEdit {
+  constructor(events, event) {
+    this._events = events;
+    this._event = event;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventEditTemplate(this._events, this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
