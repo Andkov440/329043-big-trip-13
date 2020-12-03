@@ -6,7 +6,9 @@ const createInfoTemplate = (events) => {
   const startTimeList = events.map((item) => item.starttime);
   const endTimeList = events.map((item) => item.endtime);
   const priceList = events.map((item) => item.eventPrice);
-  const total = priceList.reduce((accumulator, currentValue) => accumulator + +currentValue);
+  const total = priceList.reduce((accumulator, currentValue) => {
+    return accumulator + +currentValue;
+  }, 0);
 
   return `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
