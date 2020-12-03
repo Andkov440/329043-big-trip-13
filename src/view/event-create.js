@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {eventTypes} from "../view/utils.js";
+import {eventTypes, createElement} from "../view/utils.js";
 
 const getEventTypesList = (arr) => {
   return arr.map((item) => `<div class="event__type-item">
@@ -27,7 +27,7 @@ const getPhotoList = (arr) => {
   return arr.map((item) => `<img class="event__photo" src="${item}" alt="Event photo">`).join(``);
 };
 
-export const createEventCreateTemplate = (events) => {
+const createEventCreateTemplate = (events) => {
   const {eventType, destinationPoint, starttime, endtime, eventPrice, description, photo, eventOffers} = events[0];
 
   const eventTypesList = getEventTypesList(eventTypes);
@@ -106,3 +106,26 @@ export const createEventCreateTemplate = (events) => {
   </section>
 </form>`;
 };
+
+export default class EventCreate {
+  constructor(events) {
+    this._events = events;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventCreateTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

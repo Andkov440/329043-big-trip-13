@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {getDuration} from "./utils.js";
+import {getDuration, createElement} from "../utils.js";
 
 const getOffer = (arr) => {
   return arr.map((item) => `<li class="event__offer">
@@ -9,7 +9,7 @@ const getOffer = (arr) => {
   </li>`).join(` `);
 };
 
-export const createEventTemplate = (event) => {
+const createEventTemplate = (event) => {
   const {eventType, eventOffers, destinationPoint, starttime, endtime, eventPrice, isFavorite} = event;
 
   const offer = getOffer(eventOffers);
@@ -50,3 +50,26 @@ export const createEventTemplate = (event) => {
     </div>
   </li>`;
 };
+
+export default class Event {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

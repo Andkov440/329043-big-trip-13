@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
+import {createElement} from "../utils.js";
 
-export const createInfoTemplate = (events) => {
+const createInfoTemplate = (events) => {
   const destinationPointList = events.map((item) => item.destinationPoint);
   const startTimeList = events.map((item) => item.starttime);
   const endTimeList = events.map((item) => item.endtime);
@@ -18,3 +19,27 @@ export const createInfoTemplate = (events) => {
     </p>
   </section>`;
 };
+
+export default class SiteInfo {
+  constructor(events) {
+    this._events = events;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createInfoTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
