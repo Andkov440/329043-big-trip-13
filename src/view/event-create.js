@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import {eventTypes, createElement} from "../view/utils.js";
+import AbstractView from "./abstract.js";
+import {eventTypes} from "../view/utils.js";
 
 const getEventTypesList = (arr) => {
   return arr.map((item) => `<div class="event__type-item">
@@ -107,25 +108,13 @@ const createEventCreateTemplate = (events) => {
 </form>`;
 };
 
-export default class EventCreate {
+export default class EventCreate extends AbstractView {
   constructor(events) {
+    super();
     this._events = events;
-    this._element = null;
   }
 
   getTemplate() {
     return createEventCreateTemplate(this._events);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

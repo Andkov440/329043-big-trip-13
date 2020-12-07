@@ -9,7 +9,7 @@ import NoEventView from "./view/no-event.js";
 import EventView from "./view/event.js";
 import EventEditView from "./view/event-edit.js";
 import {generateEvent} from "./mock/event.js";
-import {render, RenderPosition} from "./utils.js";
+import {render, RenderPosition, replace} from "./utils/render.js";
 
 const EVENTS_COUNT = 10;
 
@@ -20,13 +20,11 @@ const renderEvent = (eventListElement, event) => {
   const eventEditComponent = new EventEditView(events, event);
 
   const replaceCardToForm = () => {
-    eventListElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
-    eventEditComponent.getElement().querySelector(`.event__rollup-btn`).classList.toggle(`event__rollup-open`);
+    replace(eventEditComponent, eventComponent);
   };
 
   const replaceFormToCard = () => {
-    eventListElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
-    // eventEditComponent.getElement().querySelector(`.event__rollup-btn`).classList.toggle(`event__rollup-open`);
+    replace(eventComponent, eventEditComponent);
   };
 
   const onEscKeyDown = (evt) => {
@@ -37,52 +35,50 @@ const renderEvent = (eventListElement, event) => {
     }
   };
 
-  eventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+  eventComponent.setFormEditHandler(() => {
     replaceCardToForm();
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
-  eventEditComponent.getElement().querySelector(`.event__header .event__rollup-btn`).addEventListener(`click`, () => {
+  eventEditComponent.setFormCloseHandler(() => {
     replaceFormToCard();
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-
-  eventEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
-    evt.preventDefault();
+  eventEditComponent.setFormSubmitHandler(() => {
     replaceFormToCard();
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  render(eventListElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
+  render(eventListElement, eventComponent, RenderPosition.BEFOREEND);
 };
 
 const pageBody = document.querySelector(`.page-body`);
 
 const tripMainElement = document.querySelector(`.trip-main`);
 const siteInfoComponent = new SiteInfoView(events);
-render(tripMainElement, siteInfoComponent.getElement(), RenderPosition.AFTERBEGIN);
+render(tripMainElement, siteInfoComponent, RenderPosition.AFTERBEGIN);
 
 const newEventButtonComponent = new NewEventButtonView();
-render(tripMainElement, newEventButtonComponent.getElement(), RenderPosition.BEFOREEND);
+render(tripMainElement, newEventButtonComponent, RenderPosition.BEFOREEND);
 
 const siteMenuElement = tripMainElement.querySelector(`.trip-controls`);
-render(siteMenuElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND);
-render(siteMenuElement, new FilterView().getElement(), RenderPosition.BEFOREEND);
+render(siteMenuElement, new SiteMenuView(), RenderPosition.BEFOREEND);
+render(siteMenuElement, new FilterView(), RenderPosition.BEFOREEND);
 
 const tripElement = pageBody.querySelector(`.page-main > .page-body__container`);
 
 const tripComponent = new TripView();
-render(tripElement, tripComponent.getElement(), RenderPosition.BEFOREEND);
+render(tripElement, tripComponent, RenderPosition.BEFOREEND);
 
 if (events.length === 0) {
-  render(tripComponent.getElement(), new NoEventView().getElement(), RenderPosition.BEFOREEND);
+  render(tripComponent, new NoEventView(), RenderPosition.BEFOREEND);
 } else {
-  render(tripComponent.getElement(), new SortView().getElement(), RenderPosition.BEFOREEND);
+  render(tripComponent, new SortView(), RenderPosition.BEFOREEND);
 
 
   const eventListComponent = new EventListView();
-  render(tripComponent.getElement(), eventListComponent.getElement(), RenderPosition.BEFOREEND);
+  render(tripComponent, eventListComponent, RenderPosition.BEFOREEND);
 
-  events.forEach((event) => renderEvent(eventListComponent.getElement(), event));
+  events.forEach((event) => renderEvent(eventListComponent, event));
 }

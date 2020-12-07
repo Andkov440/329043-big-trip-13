@@ -1,5 +1,6 @@
+import AbstractView from "./abstract.js";
 import dayjs from 'dayjs';
-import {eventTypes, createElement} from "../utils.js";
+import {eventTypes} from "../utils.js";
 
 const getEventTypesList = (arr) => {
   return arr.map((item) => `<div class="event__type-item">
@@ -97,27 +98,37 @@ const createEventEditTemplate = (events, event) => {
 </li>`;
 };
 
-export default class EventEdit {
+export default class EventEdit extends AbstractView {
   constructor(events, event) {
+    super();
     this._events = events;
     this._event = event;
 
-    this._element = null;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formCloseHandler = this._formCloseHandler.bind(this);
   }
 
   getTemplate() {
     return createEventEditTemplate(this._events, this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  _formCloseHandler(evt) {
+    evt.preventDefault();
+    this._callback.formClose();
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setFormCloseHandler(callback) {
+    this._callback.formClose = callback;
+    this.getElement().querySelector(`.event__header .event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
   }
 }

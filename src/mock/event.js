@@ -1,5 +1,6 @@
 import * as dayjs from 'dayjs';
-import {getRandomInteger, getRandomArray, eventTypes, destination, offers, text} from "../utils.js";
+import {eventTypes, destination, offers, text} from "../utils.js";
+import {getRandomInteger, getRandomArray} from "../utils/common.js";
 
 
 const generateEventType = () => {

@@ -1,5 +1,6 @@
+import AbstractView from "./abstract.js";
 import dayjs from 'dayjs';
-import {getDuration, createElement} from "../utils.js";
+import {getDuration} from "../utils/event.js";
 
 const getOffer = (arr) => {
   return arr.map((item) => `<li class="event__offer">
@@ -51,25 +52,25 @@ const createEventTemplate = (event) => {
   </li>`;
 };
 
-export default class Event {
+export default class Event extends AbstractView {
   constructor(event) {
+    super();
     this._event = event;
-    this._element = null;
+    this._formEditHandler = this._formEditHandler.bind(this);
   }
 
   getTemplate() {
     return createEventTemplate(this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formEditHandler(evt) {
+    evt.preventDefault();
+    this._callback.formEdit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormEditHandler(callback) {
+    this._callback.formEdit = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formEditHandler);
+    this.getElement().querySelector(`.event__rollup-btn`).classList.toggle(`event__rollup-open`);
   }
 }
