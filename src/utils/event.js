@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const getDuration = (start, end) => {
   const secondsInHour = 3600;
   const secondsInDay = 86400;
@@ -27,4 +29,12 @@ export const getDuration = (start, end) => {
   }
 
   return result;
+};
+
+export const sortEventByDate = (eventA, eventB) => {
+  return dayjs(eventA.starttime).diff(dayjs(eventB.starttime));
+};
+
+export const sortEventByPrice = (eventA, eventB) => {
+  return eventA.eventPrice - eventB.eventPrice;
 };

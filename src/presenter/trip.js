@@ -5,6 +5,8 @@ import NoEventView from "../view/no-event.js";
 import EventPresenter from "./event.js";
 import {updateItem} from "../utils/common.js";
 import {render, RenderPosition} from "../utils/render.js";
+import {sortEventByDate, sortEventByPrice} from "../utils/event.js";
+import {SortType} from "../utils.js";
 
 
 export default class Trip {
@@ -12,6 +14,7 @@ export default class Trip {
     this._tripContainer = tripContainer;
 
     this._eventPresenter = {};
+    this._currentSortType = SortType.DAY;
 
     this._tripComponent = new TripView();
     this._sortComponent = new SortView();
@@ -20,10 +23,12 @@ export default class Trip {
 
     this._handleEventChange = this._handleEventChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(tripEvents) {
     this._tripEvents = tripEvents.slice();
+    this._sourcedBoardEvents = tripEvents.slice();
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
 
     this._renderTrip();
@@ -40,8 +45,34 @@ export default class Trip {
     this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
 
+  _sortEvents(sortType) {
+    switch (sortType) {
+      case SortType.TIME:
+        this._tripEvents.sort(sortEventByDate);
+        break;
+      case SortType.PRICE:
+        this._tripEvents.sort(sortEventByPrice);
+        break;
+      default:
+        this._tripEvents = this._sourcedTripEvents.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+    this._sortEvents(sortType);
+
+    this._clearEventList();
+    this._renderEventList();
+  }
+
   _renderSort() {
     render(this._tripComponent, this._sortComponent, RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderEvent(event) {
