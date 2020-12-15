@@ -12,11 +12,8 @@ const getOffer = (arr) => {
 
 const createEventTemplate = (event) => {
   const {eventType, eventOffers, destinationPoint, starttime, endtime, eventPrice, isFavorite} = event;
-  // console.log(event);
 
   const offer = getOffer(eventOffers);
-
-  // const isActive = isFavorite ? `active` : ``;
   const favoriteClassName = isFavorite
     ? `event__favorite-btn event__favorite-btn--active`
     : `event__favorite-btn`;

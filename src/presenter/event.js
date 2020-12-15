@@ -24,14 +24,14 @@ export default class Event {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(events, event) {
+  init(event) {
     this._event = event;
 
     const prevEventComponent = this._eventComponent;
     const prevEventEditComponent = this._eventEditComponent;
 
     this._eventComponent = new EventView(event);
-    this._eventEditComponent = new EventEditView(events, event);
+    this._eventEditComponent = new EventEditView(event);
 
     this._eventComponent.setFormEditHandler(this._handleFormEdit);
     this._eventComponent.setFavoriteClickHandler(this._handleFavoriteClick);
