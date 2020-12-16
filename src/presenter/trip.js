@@ -28,7 +28,7 @@ export default class Trip {
 
   init(tripEvents) {
     this._tripEvents = tripEvents.slice();
-    this._sourcedBoardEvents = tripEvents.slice();
+    this._sourcedTripEvents = tripEvents.slice();
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
 
     this._renderTrip();
@@ -67,7 +67,7 @@ export default class Trip {
     this._sortEvents(sortType);
 
     this._clearEventList();
-    this._renderEventList();
+    this._renderEvents();
   }
 
   _renderSort() {
