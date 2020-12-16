@@ -9,10 +9,6 @@ const getEventTypesList = (arr) => {
 </div>`).join(``);
 };
 
-const getDestinationPointList = (arr) => {
-  return arr.map((item) => `<option value="${item.destinationPoint}"></option>`).join(``);
-};
-
 const getOfferList = (arr) => {
   return arr.map((item) => `<div class="event__offer-selector">
   <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.type}-1" type="checkbox" name="event-offer-${item.type}" ${item.checked ? `checked` : ``}>
@@ -24,10 +20,9 @@ const getOfferList = (arr) => {
 </div>`).join(``);
 };
 
-const createEventEditTemplate = (events, event) => {
+const createEventEditTemplate = (event) => {
   const {eventType, destinationPoint, starttime, endtime, eventPrice, description, eventOffers} = event;
   const eventTypesList = getEventTypesList(eventTypes);
-  const destinationPointList = getDestinationPointList(events);
   const offerList = getOfferList(eventOffers);
 
   return `<li class="trip-events__item">
@@ -54,7 +49,9 @@ const createEventEditTemplate = (events, event) => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationPoint}" list="destination-list-1">
         <datalist id="destination-list-1">
-        ${destinationPointList}
+          <option value="Amsterdam"></option>
+          <option value="Geneva"></option>
+          <option value="Chamonix"></option>
         </datalist>
       </div>
 
@@ -99,9 +96,8 @@ const createEventEditTemplate = (events, event) => {
 };
 
 export default class EventEdit extends AbstractView {
-  constructor(events, event) {
+  constructor(event) {
     super();
-    this._events = events;
     this._event = event;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -109,12 +105,12 @@ export default class EventEdit extends AbstractView {
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._events, this._event);
+    return createEventEditTemplate(this._event);
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this._event);
   }
 
   _formCloseHandler(evt) {

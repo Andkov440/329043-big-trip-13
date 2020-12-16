@@ -2,6 +2,7 @@ import * as dayjs from 'dayjs';
 import {eventTypes, destination, offers, text} from "../utils.js";
 import {getRandomInteger, getRandomArray} from "../utils/common.js";
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const generateEventType = () => {
   const randomIndex = getRandomInteger(0, eventTypes.length - 1);
@@ -36,6 +37,7 @@ export const generateEvent = () => {
   const starttime = generateDate();
   const endtime = generateDate();
   return {
+    id: generateId(),
     eventType: generateEventType(),
     destinationPoint: generateDestination(),
     eventOffers: getRandomArray(offers, 0, 5),
